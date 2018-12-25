@@ -121,9 +121,9 @@ int main(int argc, char* argv[]){
 
 
             double d=pow(pow(x-xTest, 2.)+pow(y-yTest,2.)+pow(z-zTest,2.),0.5);
-            double forcex = -1.0e3*m/pow(d,3.)*(xTest-x);
-            double forcey = -1.0e3*m/pow(d,3.)*(yTest-y);
-            double forcez = -1.0e3*m/pow(d,3.)*(zTest-z);
+            double forcex = -1.0e3*pow(m,2.0)/pow(d,3.0)*(xTest-x);
+            double forcey = -1.0e3*pow(m,2.0)/pow(d,3.0)*(yTest-y);
+            double forcez = -1.0e3*pow(m,2.0)/pow(d,3.0)*(zTest-z);
 
             forcexTot+=forcex;
             forceyTot+=forcey;
@@ -207,8 +207,6 @@ int main(int argc, char* argv[]){
     FILE *f=fopen(fname, "w");
     fprintf(f, "%0.10e\n", tauzTot);
     fclose(f);
-
-
 
 
 //    char fname3[80]="";
