@@ -39,12 +39,11 @@ int main(int argc, char* argv[]){
     const double e_test =atof(argv[1]);
     const double a_test = atof(argv[2]);
     const double ang_test = atof(argv[3]);
- 	const double inc_test = atof(argv[4])
     const double ang_test_rad=ang_test*M_PI/180;
     char line[MAX_SIZE];
     int N=0;
 
-    int offset = atoi(argv[6]);
+    int offset = atoi(argv[5]);
     char* tag="a";
     if (offset!=0){
     	tag="b";
@@ -65,26 +64,26 @@ int main(int argc, char* argv[]){
     // double* a =malloc(N*sizeof(double));
     char aa[80]="";
     strcat(aa, "a_");
-    strcat(aa, argv[5]);
+    strcat(aa, argv[4]);
     strcat(aa, ".txt");
     FILE* AA = fopen(aa, "r");
     FILE* AA2= fopen(aa, "r");
 
     char oo[80]="";
     strcat(oo, "Om_");
-    strcat(oo, argv[5]);
+    strcat(oo, argv[4]);
     strcat(oo, ".txt");
     FILE* OM = fopen(oo, "r");
 
     char oo2[80]="";
     strcat(oo2, "om_");
-    strcat(oo2, argv[5]);
+    strcat(oo2, argv[4]);
     strcat(oo2, ".txt");
     FILE* OM2 = fopen(oo2, "r");
 
     char ii[80]="";
     strcat(ii, "inc_");
-    strcat(ii, argv[5]);
+    strcat(ii, argv[4]);
     strcat(ii, ".txt");
     FILE* INC = fopen(ii, "r");
     double a, e, inc, omega, Omega, M;
