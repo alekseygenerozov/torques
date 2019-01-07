@@ -165,7 +165,7 @@ int main(int argc, char* argv[]){
         double x=r->particles[i].x;
         double y=r->particles[i].y;
         double z=r->particles[i].z;
-       	printf("%d\n", i);
+       	// printf("%d\n", i);
 
         for (int j=1; j<bins+1; j++){
            // if (i==1){

@@ -55,6 +55,7 @@ int main(int argc, char* argv[]){
     // const int N =1000;
     // const double tau0 = pow(N, 0.5)*pow(m*bins, 2)/a_test;
     printf("%d\n", N);
+
     // Initial conditions
     struct reb_particle star = {0};
     star.m = 1;
@@ -69,6 +70,7 @@ int main(int argc, char* argv[]){
     FILE* AA = fopen(aa, "r");
     FILE* AA2= fopen(aa, "r");
 
+
     char oo[80]="";
     strcat(oo, "Om_");
     strcat(oo, argv[4]);
@@ -81,12 +83,14 @@ int main(int argc, char* argv[]){
     strcat(oo2, ".txt");
     FILE* OM2 = fopen(oo2, "r");
 
+
     char ii[80]="";
     strcat(ii, "inc_");
     strcat(ii, argv[4]);
     strcat(ii, ".txt");
     FILE* INC = fopen(ii, "r");
     double a, e, inc, omega, Omega, M;
+    printf("%lf\n", atof(argv[1]));
 
 
     while((fgets(line, sizeof(line), AA2) != NULL) && (N<MAX_SIZE)){
@@ -165,7 +169,7 @@ int main(int argc, char* argv[]){
         double x=r->particles[i].x;
         double y=r->particles[i].y;
         double z=r->particles[i].z;
-       	printf("%d\n", i);
+       	// printf("%d\n", i);
 
         for (int j=1; j<bins+1; j++){
            // if (i==1){
