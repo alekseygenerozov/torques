@@ -3,14 +3,14 @@ include /home/aleksey/rebound/src//Makefile.defs
 disk: librebound
 	@echo ""
 	@echo "Compiling problem file ..."
-	$(CC) -I/home/aleksey/rebound/src// -Wl,-rpath,./ $(OPT) $(PREDEF) end_disk.c -L. -lrebound $(LIB) -o rebound_disk
+	$(CC) -I/home/aleksey/rebound/src// -Wl,-rpath,./ $(OPT) $(PREDEF) end_disk.c -L/home/aleksey/rebound/src/ -lrebound $(LIB) -o rebound_disk
 	@echo ""
 	@echo "REBOUND compiled successfully."
 
 disk_inc: librebound
 	@echo ""
 	@echo "Compiling problem file ..."
-	$(CC) -I/home/aleksey/rebound/src// -Wl,-rpath,./ $(OPT) $(PREDEF) end_disk_inc.c -L. -lrebound $(LIB) -o rebound_disk_inc
+	$(CC) -I/home/aleksey/rebound/src// -Wl,-rpath,./ $(OPT) $(PREDEF) end_disk_inc.c -L/home/aleksey/rebound/src/ -lrebound $(LIB) -o rebound_disk_inc
 	@echo ""
 	@echo "REBOUND compiled successfully."
 
@@ -18,28 +18,28 @@ disk_inc: librebound
 geo: librebound
 	@echo ""
 	@echo "Compiling problem file ..."
-	$(CC) -I/home/aleksey/rebound/src// -Wl,-rpath,./ $(OPT) $(PREDEF) geo.c -L. -lrebound $(LIB) -o geo
+	$(CC) -I/home/aleksey/rebound/src// -Wl,-rpath,./ $(OPT) $(PREDEF) geo.c -L/home/aleksey/rebound/src/ -lrebound $(LIB) -o geo
 	@echo ""
 	@echo "REBOUND compiled successfully."
 
 aa: librebound
 	@echo ""
 	@echo "Compiling problem file ..."
-	$(CC) -I/home/aleksey/rebound/src// -Wl,-rpath,./ $(OPT) $(PREDEF) problema.c -L. -lrebound $(LIB) -o rebounda
+	$(CC) -I/home/aleksey/rebound/src// -Wl,-rpath,./ $(OPT) $(PREDEF) problema.c -L/home/aleksey/rebound/src/ -lrebound $(LIB) -o rebounda
 	@echo ""
 	@echo "REBOUND compiled successfully."
 
 bb: librebound
 	@echo ""
 	@echo "Compiling problem file ..."
-	$(CC) -I/home/aleksey/rebound/src// -Wl,-rpath,./ $(OPT) $(PREDEF) problemb.c -L. -lrebound $(LIB) -o reboundb
+	$(CC) -I/home/aleksey/rebound/src// -Wl,-rpath,./ $(OPT) $(PREDEF) problemb.c -L/home/aleksey/rebound/src/ -lrebound $(LIB) -o reboundb
 	@echo ""
 	@echo "REBOUND compiled successfully."
 
 all: librebound
 	@echo ""
 	@echo "Compiling problem file ..."
-	$(CC) -I/home/aleksey/rebound/src// -Wl,-rpath,./ $(OPT) $(PREDEF) problem.c -L. -lrebound $(LIB) -o rebound
+	$(CC) -I/home/aleksey/rebound/src// -Wl,-rpath,./ $(OPT) $(PREDEF) problem.c -L/home/aleksey/rebound/src/ -lrebound $(LIB) -o rebound
 	@echo ""
 	@echo "REBOUND compiled successfully."
 
