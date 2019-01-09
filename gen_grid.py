@@ -10,12 +10,10 @@ offsets=[0,1]
 for e1 in e1s:
 	for a1 in a1s:
 		for ang in angs:
-			for offset in offsets:
-				temp=open('template.sh').read()
-				temp=temp.replace('xx', str(e1))
-				temp=temp.replace('yy', str(a1))
-				temp=temp.replace('zz', str(ang))
-				temp=temp.replace('oo', str(offset))
-				f=open('e{0}_a{1}_ang{2}_{3}.sh'.format(e1, a1, ang, offset), 'w')
-				f.write(temp)
-				f.close()
+			temp=open('template.sh').read()
+			temp=temp.replace('xx', str(e1))
+			temp=temp.replace('yy', str(a1))
+			temp=temp.replace('zz', str(ang))
+			f=open('e{0}_a{1}_ang{2}.sh'.format(e1, a1, ang), 'w')
+			f.write(temp)
+			f.close()
