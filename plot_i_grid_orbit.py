@@ -17,7 +17,7 @@ a_test=np.arange(0.1, 1.01,0.1)
 m=2.5e-7
 e=0.7
 tag=sys.argv[1]
-loc='/home/aleksey/rebound/examples/end_two_orbits/grid_simple/'
+loc='/home/aleksey/Dropbox/projects/disk_torque/torque_data_2/grid_two_orbits/'
 
 
 ti=np.zeros([len(a_test), len(ang_test)])

@@ -17,7 +17,7 @@ m=2.5e-7
 e=0.7
 Ntrials=5
 tag=sys.argv[1]
-loc='//home/aleksey/Dropbox/projects/disk_binaries/torque_data_2/grid_1/'
+loc='//home/aleksey/Dropbox/projects/disk_torque/torque_data_2/grid_disk_1/'
 
 
 ti=np.zeros([len(a_test), len(ang_test), Ntrials])

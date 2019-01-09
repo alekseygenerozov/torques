@@ -17,7 +17,7 @@ m=2.5e-7
 e=0.7
 Ntrials=5
 tag=sys.argv[1]
-loc='//home/aleksey/Dropbox/projects/disk_binaries/torque_data_2/grid_1/'
+loc='//home/aleksey/Dropbox/projects/disk_torque/torque_data_2/grid_disk_1/'
 
 
 ti=np.zeros([len(a_test), len(ang_test)])
@@ -46,20 +46,19 @@ for ii,a1 in enumerate(a_test):
 		else:
 			tib[ii,jj]=jo/tmp
 
-ti_avg=np.mean(ti, axis=2)
-ti_err=np.std(ti, axis=2)
 
 fig,ax=plt.subplots(figsize=(15,8))
 ax.set_xlim(5,90)
 ax.set_xlabel(r'$\bar{\omega}$')
 ax.set_ylabel(r'$a$')
 
-tlist=[1.0e-1, 1, 10.0]
+tlist=[0.0001, 0.01, 1.0e-1, 1, 10.0]
 tlist_tex=map(latex_exp.latex_exp, tlist)
 tlist_tex=[re.sub('1.0 \\\\times\s', '', tt) for tt in tlist_tex] 
 
 # print np.min((ti_err/ti_avg)),np.max(np.abs(ti_err/ti_avg))
-p1=ax.pcolormesh(ang_test, a_test, abs((ti_b-ti)/ti), cmap='RdBu_r',norm=colors.LogNorm(vmin=0.01, vmax=10))
+print np.min(abs((tib-ti)/ti))
+p1=ax.pcolormesh(ang_test, a_test, abs((tib-ti)/ti), cmap='RdBu_r',norm=colors.LogNorm(vmin=0.001, vmax=2))
 cbar=fig.colorbar(p1, ax=ax, ticks=tlist, label=r'$\tau$')
 cbar.ax.set_yticklabels(tlist_tex) 
 fig.savefig('{0}_grid_disk_conv.pdf'.format(tag))
