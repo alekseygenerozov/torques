@@ -3,7 +3,7 @@ import shlex
 import numpy as np
 
 
-eccs=[0.5, 0.6, 0.7, 0.8, 0.9, 0.99]
+eccs=[0.5, 0.6, 0.8, 0.9, 0.99]
 
 for ecc in eccs:
 	job=shlex.split(bc.bash_command('squeue -u alge9397 -t running|grep -i end_torq'))

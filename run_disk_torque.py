@@ -11,7 +11,7 @@ dd=1.0
 i=0
 
 No=1000
-while (dd>0.05) and (i<6):
+while (dd>0.05) and (i<4):
 	# bc.bash_command('/home/aleksey/code/c/torques/rebound_disk {0} {1} {2} {3} {4} {5}'.format(e1, a1, ang, idx, 0,  No))
 	# bc.bash_command('/home/aleksey/code/c/torques/rebound_disk {0} {1} {2} {3} {4} {5}'.format(e1, a1, ang, idx, 1,  No))
 

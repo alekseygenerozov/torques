@@ -70,7 +70,9 @@ int main(int argc, char* argv[]){
 
     // reb_move_to_com(r);
    double* tauz2 = malloc(bins*sizeof(double));
-   double* tauz3 = malloc(bins*sizeof(double));
+   // double* tauz3 = malloc(bins*sizeof(double));
+   double tauz_apo=0;
+   double ieDot_apo=0;
 
     double c = 0;
     double c1 = 0;
@@ -105,9 +107,9 @@ int main(int argc, char* argv[]){
                tauz2[j]=0;
                c4[j]=0;
            }
-           if (j==1){
-               tauz3[i-1]=0;
-           }
+           // if (j==1){
+           //     tauz3[i-1]=0;
+           // }
             double xTest=r->particles[bins+j].x;
             double yTest=r->particles[bins+j].y;
             double zTest=r->particles[bins+j].z;
@@ -172,17 +174,14 @@ int main(int argc, char* argv[]){
             // ieDot3+= -jz*fr/e_test*(cos(phi))+tauz*vr/e_test*(2/e_test+cos(phi));
 
 
-//          Compensated summation for improved accuracy
-//          double y = (xTest*forcey-yTest*forcex) - c;
-//	    double t = tauz + y;
-//	    c = (t - tauz) - y;
-
            yy= (tauz)-c4[j-1];
            tt= tauz2[j-1]+yy;
            c4[j]=(tt-tauz2[j-1])-yy;
            tauz2[j-1]=tt;
            if (j==bins/2){
-               tauz3[i-1]=tauz3[i-1] +(xTest*forcey-yTest*forcex);
+               tauz_apo=tauz_apo + (xTest*forcey-yTest*forcex);
+               ieDot_apo=ieDot_apo + (fr );
+
            }
        }
 
@@ -211,21 +210,31 @@ int main(int argc, char* argv[]){
     fprintf(f, "%0.10e\n", tauzTot);
     fclose(f);
 
-   char fname2[80]="";
-   strcat(fname2, "tau_bin_");
-   for (int i=1; i<4; i++){
-       strcat(fname2, "_");
-       strcat(fname2, argv[i]);
-   }
-   printf("%s\n",fname2);
-   FILE *f2=fopen(fname2, "w");
+    char fname2[80]="";
+    strcat(fname2, "apo_");
+    for (int i=1; i<4; i++){
+        strcat(fname2, "_");
+        strcat(fname2, argv[i]);
+    }
+    FILE *f2=fopen(fname2, "w");
+    fprintf(f2, "%0.10e %0.10e\n", tauz_apo, ieDot_apo);
+    fclose(f2);
 
-   for (int j=1; j<bins+1; j++){
-       double xTest=r->particles[bins+j].x;
-       double yTest=r->particles[bins+j].y;
-       fprintf(f2, "%lf %lf %e\n", xTest, yTest, tauz2[j-1]);
-   }
-   fclose(f2);
+   // char fname2[80]="";
+   // strcat(fname2, "tau_bin_");
+   // for (int i=1; i<4; i++){
+   //     strcat(fname2, "_");
+   //     strcat(fname2, argv[i]);
+   // }
+   // printf("%s\n",fname2);
+   // FILE *f2=fopen(fname2, "w");
+
+   // for (int j=1; j<bins+1; j++){
+   //     double xTest=r->particles[bins+j].x;
+   //     double yTest=r->particles[bins+j].y;
+   //     fprintf(f2, "%lf %lf %e\n", xTest, yTest, tauz2[j-1]);
+   // }
+   // fclose(f2);
 
    // char fname3[80]="";
    // strcat(fname3, "tau_bin_b_");
