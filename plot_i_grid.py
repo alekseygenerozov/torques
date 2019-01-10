@@ -17,7 +17,7 @@ m=2.5e-7
 e=0.7
 Ntrials=5
 tag=sys.argv[1]
-loc='//home/aleksey/Dropbox/projects/disk_torque/torque_data_2/grid_disk_1/'
+loc='//home/aleksey/Dropbox/projects/disk_torque/torque_data_2/grid_disk_3/'
 
 deriv=np.zeros([len(a_test), len(ang_test), Ntrials])
 derivb=np.zeros([len(a_test), len(ang_test), Ntrials])
@@ -35,27 +35,27 @@ for ii,a1 in enumerate(a_test):
 			if tag=='i':
 				norm=1.0/m
 				num[ii, jj]=ang*np.pi/180
-			deriv[ii,jj, idx-1]=np.genfromtxt(loc+'{2}_N1000_a_0.7_{0}_{1}_{3}'.format(a1, ang, tag, idx))*norm
-			derivb[ii, jj, idx-1]=np.genfromtxt(loc+'{2}_N1000_b_0.7_{0}_{1}_{3}'.format(a1, ang, tag, idx))*norm
+			deriv[ii,jj,idx-1]=np.genfromtxt(loc+'{2}_N1000_a_0.7_{0}_{1}_{3}'.format(a1, ang, tag, idx))*norm
+			derivb[ii,jj,idx-1]=np.genfromtxt(loc+'{2}_N1000_b_0.7_{0}_{1}_{3}'.format(a1, ang, tag, idx))*norm
 
 
 ti_avg=num/np.mean(deriv, axis=2)
-ti_err=np.std(num/deriv, axis=2)
+# ti_err=np.std(num/deriv, axis=2)
 
-fig,ax=plt.subplots(figsize=(15,8))
-ax.set_xlim(5,90)
-ax.set_xlabel(r'$\bar{\omega}$')
-ax.set_ylabel(r'$a$')
+# fig,ax=plt.subplots(figsize=(15,8))
+# ax.set_xlim(5,90)
+# ax.set_xlabel(r'$\bar{\omega}$')
+# ax.set_ylabel(r'$a$')
 
-tlist=[1.0e-1, 1, 10.0]
-tlist_tex=map(latex_exp.latex_exp, tlist)
-tlist_tex=[re.sub('1.0 \\\\times\s', '', tt) for tt in tlist_tex] 
+# tlist=[1.0e-1, 1, 10.0]
+# tlist_tex=map(latex_exp.latex_exp, tlist)
+# tlist_tex=[re.sub('1.0 \\\\times\s', '', tt) for tt in tlist_tex] 
 
-# print np.min((ti_err/ti_avg)),np.max(np.abs(ti_err/ti_avg))
-p1=ax.pcolormesh(ang_test, a_test, abs(ti_err/ti_avg), cmap='RdBu_r',norm=colors.LogNorm(vmin=0.01, vmax=10))
-cbar=fig.colorbar(p1, ax=ax, ticks=tlist, label=r'$\tau$')
-cbar.ax.set_yticklabels(tlist_tex) 
-fig.savefig('{0}_grid_disk_err.pdf'.format(tag))
+# # print np.min((ti_err/ti_avg)),np.max(np.abs(ti_err/ti_avg))
+# p1=ax.pcolormesh(ang_test, a_test, abs(ti_err/ti_avg), cmap='RdBu_r',norm=colors.LogNorm(vmin=0.01, vmax=10))
+# cbar=fig.colorbar(p1, ax=ax, ticks=tlist, label=r'$\tau$')
+# cbar.ax.set_yticklabels(tlist_tex) 
+# fig.savefig('{0}_grid_disk_err.pdf'.format(tag))
 
 
 fig,ax=plt.subplots(figsize=(15,8))

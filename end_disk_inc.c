@@ -50,7 +50,7 @@ int main(int argc, char* argv[]){
     	offset=1;
     }
  		   
-    const int bins = 1002;
+    const int bins = argv[6];
     const double m = 1.0/4e6/bins;
     // const int N =1000;
     // const double tau0 = pow(N, 0.5)*pow(m*bins, 2)/a_test;
