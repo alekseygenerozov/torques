@@ -59,7 +59,8 @@ ti_avg=num/np.mean(deriv, axis=2)
 
 
 fig,ax=plt.subplots(figsize=(15,8))
-ax.set_xlim(5,90)
+ax.set_xlim(2.5,92.5)
+ax.set_ylim(0.05, 1.05)
 ax.set_xlabel(r'$\bar{\omega}$')
 ax.set_ylabel(r'$a$')
 
@@ -67,7 +68,9 @@ tlist=[-1.0e6, -1.0e5, -1.0e4, -1.0e3,1.0e3, 1.0e4, 1.0e5, 1.0e6]
 tlist_tex=map(latex_exp.latex_exp, tlist)
 tlist_tex=[re.sub('1.0 \\\\times\s', '', tt) for tt in tlist_tex] 
 
-p1=ax.pcolormesh(ang_test, a_test, ti_avg, cmap='RdBu_r',norm=colors.SymLogNorm(linthresh=100, vmin=-1.0e6, vmax=1.0e6))
+ang_ords=np.append(ang_test-2.5, ang_test[-1]+2.5)
+a_ords=np.append(a_test-0.05, a_test[-1]+0.05)
+p1=ax.pcolormesh(ang_ords, a_ords, ti_avg, cmap='RdBu_r',norm=colors.SymLogNorm(linthresh=100, vmin=-1.0e6, vmax=1.0e6))
 
 # plt.colorbar(p1, label=r'$log(t_i)$')
 cbar=fig.colorbar(p1, ax=ax, ticks=tlist, label=r'$\tau$')

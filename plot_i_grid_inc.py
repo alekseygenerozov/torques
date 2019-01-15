@@ -26,18 +26,25 @@ num=np.zeros(len(ang_test))
 # tib=np.zeros([len(a_test), len(ang_test)])
 
 a1=1.0
+norm=1.0
+lab=r'$t_j$'
 for jj,ang in enumerate(ang_test):
 	for idx in range(1,Ntrials+1):
 		print loc+'{2}_N1000_a_0.7_{0}_{1:.1}_{3}'.format(a1, float(ang), tag, idx),jj
-		deriv[jj,idx-1]=np.genfromtxt(loc+'{2}_N1000_a_0.7_{0}_{1}_{3}'.format(a1, ang, tag, idx))
-		derivb[jj,idx-1]=np.genfromtxt(loc+'{2}_N1000_b_0.7_{0}_{1}_{3}'.format(a1, ang, tag, idx))
-
 		num[jj]=m*(a1*(1.-e**2))**0.5
 
-fig,ax=plt.subplots(figsize=(15,8))
+		if tag=='i':
+			norm=1.0/m
+			num[jj]=ang*np.pi/180
+			lab=r'$t_i$'
+		deriv[jj,idx-1]=np.genfromtxt(loc+'{2}_N1000_a_0.7_{0}_{1}_{3}'.format(a1, ang, tag, idx))*norm
+		derivb[jj,idx-1]=np.genfromtxt(loc+'{2}_N1000_b_0.7_{0}_{1}_{3}'.format(a1, ang, tag, idx))*norm
+
+
+fig,ax=plt.subplots(figsize=(10,9))
 ax.set_xlim(0., 20.)
 ax.set_xlabel(r'$i$')
-ax.set_ylabel(r'$t$')
+ax.set_ylabel(lab)
 
 ti_avg=num/np.mean(deriv, axis=1)
 # ti_err=np.std(ti, axis=2)
@@ -49,7 +56,7 @@ ti_avg=num/np.mean(derivb, axis=1)
 ax.semilogy(ang_test, abs(ti_avg))
 ax.semilogy(ang_test[ti_avg<0], abs(ti_avg[ti_avg<0]), 'rs')
 ax.semilogy(ang_test[ti_avg>0], abs(ti_avg[ti_avg>0]), 'rD')
-ax.annotate(r'$t_{sec,i}$=2.5\times 10^4')
+ax.annotate(r'$t_{sec}=2.5\times 10^4$', (19, 1.0e7), verticalalignment='top', horizontalalignment='right')
 
 
 fig.savefig('{0}_grid_disk_inc.pdf'.format(tag))

@@ -2,13 +2,14 @@ import numpy as np
 
 # a1s=np.arange(0., 1.01, 0.1)
 # a1s[0]=0.01
-# angs=np.arange(5., 91., 5.)
-# e1s=np.arange(0.5, 1.01, 0.1)
-# e1s[-1]=0.99
+a1s=np.array([1.])
+angs=np.arange(0.0, 91., 5.)
+e1s=np.arange(0.0, 1.01, 0.02)
+e1s[-1]=0.99
+e1s[0]=0.01
 # offsets=[0,1]
-a1s=[1.]
-e1s=[0.7]
-angs=[0.2, 0.4, 1.0, 2.0, 4.0, 8.0, 16.0]
+# e1s=[0.7]
+# angs=[0.2, 0.4, 1.0, 2.0, 4.0, 8.0, 16.0]
 
 for e1 in e1s:
 	for a1 in a1s:
