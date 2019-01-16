@@ -45,6 +45,16 @@ ax.set_xlabel(r'$\bar{\omega}$')
 ax.set_ylabel(r'$a$')
 
 
+for ii,a1 in enumerate(a_test):
+	for jj,ang in enumerate(ang_test):
+		tmp=abs(ti[ii,jj])
+		if tmp>=0.01:
+			plt.text(ang, a1, '{0:.0f}'.format(abs(ti[ii,jj])), fontsize=12, horizontalalignment='center')
+		else:
+			plt.text(ang, a1, '{0:.0e}'.format(abs(ti[ii,jj])), fontsize=12, horizontalalignment='center')
+
+
+
 tlist=[-1.0e6, -1.0e5, -1.0e4, -1.0e3,1.0e3, 1.0e4, 1.0e5, 1.0e6]
 tlist_tex=map(latex_exp.latex_exp, tlist)
 tlist_tex=[re.sub('1.0 \\\\times\s', '', tt) for tt in tlist_tex] 

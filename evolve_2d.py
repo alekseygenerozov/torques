@@ -11,7 +11,7 @@ ang_test=np.arange(0., 91, 5)
 ang_test_rad=ang_test*np.pi/180.0
 # a_test=np.arange(0.1, 1.01,0.1)
 a_test=[1.0]
-e_test=np.arange(0.0, 1.01, 0.02)
+e_test=np.arange(0.0, 1.01, 0.1)
 e_test[-1]=0.99
 e_test[0]=0.01
 m=2.5e-7
@@ -76,7 +76,7 @@ def rhs(t,y):
 e_part=0.7
 a_part=1.0
 j_part=j(e_part)
-omega_part=0.0
+omega_part=0.1
 ##Time step
 t_tot=100.0*t_norm
 delta_t=2.0*np.pi
