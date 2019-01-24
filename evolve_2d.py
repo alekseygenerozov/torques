@@ -1,24 +1,26 @@
 import numpy as np
-from scipy.interpolate import griddata, interp2d
+from scipy.interpolate import griddata, interp2d, interpn
 import sys
 
 from scipy.integrate import ode
 
 loc='//home/aleksey/Dropbox/projects/disk_torque/torque_data_2/grid_disk_a1/'
 
-Ntrials=1
+Ntrials=3
 ang_test=np.arange(0., 91, 5)
 ang_test_rad=ang_test*np.pi/180.0
 # a_test=np.arange(0.1, 1.01,0.1)
 a_test=[1.0]
-e_test=np.arange(0.0, 1.01, 0.1)
+e_test=np.arange(0., 1.01, 0.02)
 e_test[-1]=0.99
 e_test[0]=0.01
+
 m=2.5e-7
 mdisk=1000.0*m
 t_sec=2.0*np.pi*(1.0/mdisk)
 t_norm=t_sec/(2.0*np.pi)
 a0=1.0
+
 
 
 def j(e):
@@ -37,6 +39,7 @@ jdot_avg=np.zeros([len(e_test), len(ang_test)])
 for ii,e1 in enumerate(e_test):
 	for kk,ang in enumerate(ang_test):
 		for idx in range(1,Ntrials+1):
+
 			jdot[ii, kk, idx-1]=np.genfromtxt(loc+'tau_N1000_a_{0:g}_{1}_{2}_{3}'.format(e1, a0, ang, idx))/m
 			idot[ii, kk, idx-1]=np.genfromtxt(loc+'i_N1000_a_{0:g}_{1}_{2}_{3}'.format(e1, a0,  ang, idx))/m
 
@@ -45,25 +48,19 @@ jdot_avg=np.mean(jdot, axis=2)
 
 
 def jdot_interp(e, omega):
-	# ee, oo=np.meshgrid(e_test, ang_test)
-	# ee_i, oo_i=np.meshgrid(e, np.abs(omega))
 	sign=1.0
 	if omega<0:
 		sign=-1.0
-	return sign*(interp2d(e_test, ang_test_rad, jdot_avg.T))(e, np.abs(omega))
-	#return sign*(griddata((ee.ravel(), oo.ravel()), jdot_avg.ravel(), (ee_i, oo_i)).ravel())[0]
+	# return sign*(interp2d(e_test, ang_test_rad, jdot_avg.T, kind='linear'))(e, np.abs(omega))
+	return sign*interpn((e_test, ang_test_rad), jdot_avg, [e, abs(omega)], method='linear')
 
 
 def idot_interp(e, omega):
-	# ee, oo=np.meshgrid(e_test, ang_test)
-	# ee_i0,  oo_i0=np.meshgrid(0.7, 0.0)
-	# ee_i,  oo_i=np.meshgrid(e, np.abs(omega))
-	##Precession rate of orbit at inner edge of disk
-	# idot0=(griddata((ee.ravel(), oo.ravel()), idot_avg.ravel(), (ee_i0, oo_i0)).ravel())[0]
-	interpa=(interp2d(e_test, ang_test_rad, idot_avg.T))
-
-	return interpa(e, np.abs(omega))-interpa(0.7, 0.0)
-
+	
+	interpa=(interp2d(e_test, ang_test_rad, idot_avg.T, kind='linear'))
+	# return interpa(e, abs(omega))-interpa(0.7, 0.0)
+	idot0=interpn((e_test, ang_test_rad), idot_avg, [0.7, 0.0], method='linear')
+	return interpn((e_test, ang_test_rad), idot_avg, [e, abs(omega)])-idot0
 
 def rhs(t,y):
 	j=y[0]
@@ -74,9 +71,9 @@ def rhs(t,y):
 
 ##Initial conditions for test particle 
 e_part=0.7
-a_part=1.0
+# a_part=1.0
 j_part=j(e_part)
-omega_part=0.1
+omega_part=sys.argv[1]
 ##Time step
 t_tot=100.0*t_norm
 delta_t=2.0*np.pi

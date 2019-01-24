@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.interpolate import griddata
+from scipy.interpolate import griddata, interpn
 import sys
 
 from scipy.integrate import ode
@@ -11,7 +11,7 @@ ang_test=np.arange(0., 91, 5)
 ang_test_rad=ang_test*np.pi/180.0
 a_test=np.arange(0.1, 1.01,0.1)
 # a_test=[1.0]
-e_test=[0.5, 0.6, 0.8, 0.9]
+e_test=[0.5, 0.6, 0.7, 0.8, 0.9]
 # e_test[-1]=0.99
 # e_test[0]=0.01
 m=2.5e-7
@@ -45,22 +45,22 @@ jdot_avg=np.mean(jdot, axis=3)
 
 
 def jdot_interp(e, a, omega):
-	ee, aa, oo=np.meshgrid(e_test, a_test, ang_test_rad)
-	ee_i, aa_i, oo_i=np.meshgrid(e, a, np.abs(omega))
+	# ee, aa, oo=np.meshgrid(e_test, a_test, ang_test_rad)
+	# ee_i, aa_i, oo_i=np.meshgrid(e, a, np.abs(omega))
 	sign=1.0
 	if omega<0:
 		sign=-1.0
-	return sign*(griddata((ee.ravel(), aa.ravel(), oo.ravel()), jdot_avg.ravel(), (ee_i, aa_i, oo_i)).ravel())[0]
+	return sign*interpn((e_test, a_test, ang_test_rad), jdot_avg, [e, a, abs(omega)], method='linear')
 
 
 def idot_interp(e, a, omega):
-	ee, aa, oo=np.meshgrid(e_test, a_test, ang_test_rad)
-	ee_i0, aa_i0, oo_i0=np.meshgrid(0.7, 1.0, 0.0)
-	ee_i, aa_i, oo_i=np.meshgrid(e, a, np.abs(omega))
-	##Precession rate of orbit at inner edge of disk
-	idot0=(griddata((ee.ravel(), aa.ravel(), oo.ravel()), idot_avg.ravel(), (ee_i0, aa_i0, oo_i0)).ravel())[0]
-
-	return (griddata((ee.ravel(), aa.ravel(), oo.ravel()), idot_avg.ravel(), (ee_i, aa_i, oo_i)).ravel())[0]-idot0
+	# ee, aa, oo=np.meshgrid(e_test, a_test, ang_test_rad)
+	# ee_i0, aa_i0, oo_i0=np.meshgrid(0.7, 1.0, 0.0)
+	# ee_i, aa_i, oo_i=np.meshgrid(e, a, np.abs(omega))
+	# ##Precession rate of orbit at inner edge of disk
+	# idot0=(griddata((ee.ravel(), aa.ravel(), oo.ravel()), idot_avg.ravel(), (ee_i0, aa_i0, oo_i0)).ravel())[0]
+	idot0=interpn((e_test, a_test, ang_test_rad), idot_avg, [0.7, 1.0, abs(0.0)], method='linear')
+	return interpn((e_test, a_test, ang_test_rad), idot_avg, [e, a, abs(omega)])-idot0
 
 
 def rhs(t,y):
