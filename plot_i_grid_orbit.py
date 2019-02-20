@@ -48,10 +48,11 @@ ax.set_ylabel(r'$a$')
 for ii,a1 in enumerate(a_test):
 	for jj,ang in enumerate(ang_test):
 		tmp=abs(ti[ii,jj])
-		if tmp>=0.01:
-			plt.text(ang, a1, '{0:.0f}'.format(abs(ti[ii,jj])), fontsize=12, horizontalalignment='center')
-		else:
-			plt.text(ang, a1, '{0:.0e}'.format(abs(ti[ii,jj])), fontsize=12, horizontalalignment='center')
+		plt.text(ang, a1, '{0:.0e}'.format(abs(ti[ii,jj])), fontsize=10, horizontalalignment='center')
+		# if tmp>=0.01:
+		# 	plt.text(ang, a1, '{0:.0e}'.format(abs(ti[ii,jj])), fontsize=12, horizontalalignment='center',fontsize=16)
+		# else:
+		# 	plt.text(ang, a1, '{0:.0e}'.format(abs(ti[ii,jj])), fontsize=12, horizontalalignment='center', fontsize=16)
 
 
 

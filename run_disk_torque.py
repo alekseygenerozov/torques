@@ -16,6 +16,8 @@ while (dd>0.05) and (i<4):
 	# bc.bash_command('/home/aleksey/code/c/torques/rebound_disk {0} {1} {2} {3} {4} {5}'.format(e1, a1, ang, idx, 1,  No))
 
 	bc.bash_command('/projects/alge9397/code/c/torques/rebound_disk {0} {1} {2} {3} {4} {5}'.format(e1, a1, ang, idx, 0,  No))
+	sys.stdout.flush()
+
 	bc.bash_command('/projects/alge9397/code/c/torques/rebound_disk {0} {1} {2} {3} {4} {5}'.format(e1, a1, ang, idx, 1,  No))
 
 	tdot1=np.genfromtxt('tau_N1000_a_{0}_{1}_{2}_{3}'.format(e1, a1, ang, idx))
@@ -27,4 +29,3 @@ while (dd>0.05) and (i<4):
 	No=No*2
 	i+=1
 	print e1, a1, ang, i-1,No/2, abs((tdot1-tdot2)/tdot1), abs((idot1-idot2)/idot1)
-	sys.stdout.flush()

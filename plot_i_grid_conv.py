@@ -10,12 +10,12 @@ import re
 
 import sys
 
-ang_test=np.arange(5., 91, 5)
+ang_test=np.arange(0., 91, 5)
 a_test=np.arange(0.1, 1.01,0.1)
 
 
 e=0.7
-Ntrials=5
+Ntrials=1
 tag=sys.argv[1]
 loc='//home/aleksey/Dropbox/projects/disk_torque/torque_data_2/grid_disk_3/'
 
@@ -33,8 +33,6 @@ for ecc in eccs:
 	for ii,a1 in enumerate(a_test):
 		for jj,ang in enumerate(ang_test):
 			for idx in range(1,Ntrials+1):
-				if tag=='i':
-					norm=1.0/m
 				deriv[ii,jj, idx-1]=np.genfromtxt(loc+'{3}_N1000_a_{0}_{1}_{2}_{4}'.format(ecc, a1, ang, tag, idx))*norm
 				derivb[ii, jj, idx-1]=np.genfromtxt(loc+'{3}_N1000_b_{0}_{1}_{2}_{4}'.format(ecc, a1, ang, tag, idx))*norm
 
@@ -54,10 +52,13 @@ for ecc in eccs:
 
 	diffs=abs((derivb_avg-deriv_avg)/deriv_avg)
 	print ecc
+	# for ii,a1 in enumerate(a_test):
+	# 	for jj,ang in enumerate(ang_test):
+	# 		if diffs[ii, jj]>0.1:
+	# 			print a1, ang, diffs[ii, jj], deriv_avg[ii, jj], derivb_avg[ii, jj]
 	for ii,a1 in enumerate(a_test):
 		for jj,ang in enumerate(ang_test):
-			if diffs[ii, jj]>0.1:
-				print a1, ang, diffs[ii, jj], deriv_avg[ii, jj], derivb_avg[ii, jj]
+			plt.text(ang, a1, '{0:.2f}'.format(diffs[ii, jj]), fontsize=10, horizontalalignment='center')
 
 	cmap=cm.get_cmap('RdBu_r')
 	##below line is not working...

@@ -2,12 +2,15 @@ import numpy as np
 
 # a1s=np.arange(0., 1.01, 0.1)
 # a1s[0]=0.01
-a1s=np.array([0.1])
+a1s=np.array([0.5])
 angs=np.arange(0.0, 91., 5.)
 #e1s=[1.0-1.0e-6]
-e1s=np.arange(0.0, 1.01, 0.02)
-# e1s[-1]=0.99
-# e1s[0]=0.01
+e1s=np.arange(0.0, 1.01, 0.1)
+e1s[-1]=0.99
+e1s[0]=0.01
+e2s=[1.0-1.0e-6]
+e1s=np.concatenate([e1s, e2s])
+print len(e1s)*len(angs)*4
 # offsets=[0,1]
 # e1s=[0.7]
 # angs=[0.2, 0.4, 1.0, 2.0, 4.0, 8.0, 16.0]
