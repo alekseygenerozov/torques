@@ -3,7 +3,7 @@ import numpy as np
 # a1s=np.arange(0., 1.01, 0.1)
 # a1s[0]=0.01
 a1s=np.array([0.5])
-angs=np.arange(0.0, 91., 5.)
+angs=np.arange(95., 181., 5.)
 #e1s=[1.0-1.0e-6]
 e1s=np.arange(0.0, 1.01, 0.1)
 e1s[-1]=0.99

@@ -33,6 +33,17 @@ struct tup comp_sum(double sum,  double val, double c){
     return res;
 }
 
+void out(char* pre, char* tag, double out){
+    char fname[80]="";
+    strcat(fname, pre);
+    strcat(fname, "_");
+    strcat(fname, tag);
+    FILE* f = fopen(fname, "w");
+    fprintf(f, "%0.10e\n", out);
+    fclose(f);
+
+}
+
 int main(int argc, char* argv[]){
     struct reb_simulation* r = reb_create_simulation();
     r->G         = 1;
@@ -40,6 +51,7 @@ int main(int argc, char* argv[]){
     const double a_test = atof(argv[2]);
     const double ang_test = atof(argv[3]);
     const double ang_test_rad=ang_test*M_PI/180;
+    printf("%lf\n", e_test);
     char line[MAX_SIZE];
     int N=0;
 
@@ -112,6 +124,8 @@ int main(int argc, char* argv[]){
             pt = reb_tools_orbit_to_particle(r->G, r->particles[0], m, a, e, inc, Omega, omega, f);
             reb_add(r, pt);
         }
+        // printf("%d\n", N);
+
 
     }
     printf("%d\n", N);
@@ -136,14 +150,15 @@ int main(int argc, char* argv[]){
 
 
 	// double ex=e_test*cos(ang_test*M_PI/180);
- //    double ey=e_test*sin(ang_test*M_PI/180);
+ 	//double ey=e_test*sin(ang_test*M_PI/180);
    	// double* tauz2 = malloc(bins*sizeof(double));
    	// double* tauz3 = malloc(bins*sizeof(double));
 
     double c = 0;
     // double c1 = 0;
-    // double c2 = 0;
+    double c2 = 0;
     double c3 = 0;
+
     double forcexTot=0;
     double forceyTot=0;
     double forcezTot=0;
@@ -155,6 +170,7 @@ int main(int argc, char* argv[]){
     // double edotx=0;
     // double edoty=0;
     double jz=0;
+    double ieDot=0;
     double ieDot2=0;
     // double ieDot3=0;
     double pre=1.0;
@@ -167,7 +183,6 @@ int main(int argc, char* argv[]){
         double x=r->particles[i].x;
         double y=r->particles[i].y;
         double z=r->particles[i].z;
-       	// printf("%d\n", i);
 
         for (int j=1; j<bins+1; j++){
            // if (i==1){
@@ -210,44 +225,50 @@ int main(int argc, char* argv[]){
             double fr=forcex*cos(phi+ang_test_rad)+forcey*sin(phi+ang_test_rad);
             double vr=vx*cos(phi+ang_test_rad)+vy*sin(phi+ang_test_rad);
 
+            tmp = pre*(-jz*fr/e_test*(cos(phi)));
+            res=comp_sum(ieDot2, tmp, c2);
+            c2=res.c;
+            ieDot2=res.sum;
 
             tmp = pre*(-jz*fr/e_test*(cos(phi))+tauz*vr/e_test*(2/e_test+cos(phi)));
-            res=comp_sum(ieDot2, tmp, c3);
+            res=comp_sum(ieDot, tmp, c3);
             c3=res.c;
-            ieDot2=res.sum;
+            ieDot=res.sum;
+
 
        }
 
     }
     // double ieDot=(ex*edoty-ey*edotx)/pow(e_test, 2.);
 
-    char fname[80]="";
-    strcat(fname, "tau_N");
-    snprintf(fname+strlen(fname), sizeof(fname), "%d", N);
-    strcat(fname,"_");
-    strcat(fname, tag);
+    char tag2[80]="";
+    strcat(tag2, "N");
+    snprintf(tag2+strlen(tag2), sizeof(tag2), "%d", N);
+    strcat(tag2,"_");
+    strcat(tag2, tag);
     for (int i=1; i<5; i++){
-        strcat(fname, "_");
-        strcat(fname, argv[i]);
+        strcat(tag2, "_");
+        strcat(tag2, argv[i]);
     }
-    printf("%s\n",fname);
-    FILE *f=fopen(fname, "w");
-    fprintf(f, "%0.10e\n", tauzTot);
-    fclose(f);
+    printf("%s\n",tag2);
 
-    char iname[80]="";
-    strcat(iname, "i_N");
-    snprintf(iname+strlen(iname), sizeof(iname), "%d", N);
-    strcat(iname,"_");
-    strcat(iname, tag);
-    for (int i=1; i<5; i++){
-        strcat(iname, "_");
-        strcat(iname, argv[i]);
-    }
-    printf("%s\n",iname);
-    FILE *ie=fopen(iname, "w");
-    fprintf(ie, "%0.10e\n", ieDot2);
-    fclose(ie);
+    out("tau", tag2, tauzTot);
+    out("i", tag2, ieDot);
+    out("i2", tag2, ieDot2);
+
+    // char iname[80]="";
+    // strcat(iname, "i_N");
+    // snprintf(iname+strlen(iname), sizeof(iname), "%d", N);
+    // strcat(iname,"_");
+    // strcat(iname, tag);
+    // for (int i=1; i<5; i++){
+    //     strcat(iname, "_");
+    //     strcat(iname, argv[i]);
+    // }
+    // printf("%s\n",iname);
+    // FILE *ie=fopen(iname, "w");
+    // fprintf(ie, "%0.10e\n", ieDot2);
+    // fclose(ie);
 
     return 0;
 }
