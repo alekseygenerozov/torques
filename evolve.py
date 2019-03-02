@@ -38,9 +38,9 @@ jdot_avg=np.zeros([len(e_test), len(a_test), len(ang_test)])
 
 for ii,e1 in enumerate(e_test):
 	for jj,a1 in enumerate(a_test):
-		for kk,ang in enumerate(ang_test[1:]):
+		for kk,ang in enumerate(ang_test):
 			for idx in range(1,Ntrials+1):
-				jdot[ii, jj, kk+1, idx-1]=np.genfromtxt(loc+'tau_N1000_a_{0:.2f}_{1}_{2}_{3}'.format(e1, a1, ang, idx))/m
+				jdot[ii, jj, kk, idx-1]=np.genfromtxt(loc+'tau_N1000_a_{0:.2f}_{1}_{2}_{3}'.format(e1, a1, ang, idx))/m
 				idot[ii, jj, kk+1, idx-1]=np.genfromtxt(loc+'i_N1000_a_{0:.2f}_{1}_{2}_{3}'.format(e1, a1, ang, idx))/m
 
 idot_avg=np.mean(idot, axis=3)

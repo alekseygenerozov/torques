@@ -51,6 +51,7 @@ int main(int argc, char* argv[]){
     }
  		   
     const int bins = atoi(argv[6]);
+    const double qq = atof(argv[7]);
     const double m = 1.0/4e6/bins;
     // const int N =1000;
     // const double tau0 = pow(N, 0.5)*pow(m*bins, 2)/a_test;
@@ -90,16 +91,14 @@ int main(int argc, char* argv[]){
 
 
     while((fgets(line, sizeof(line), AA2) != NULL) && (N<MAX_SIZE)){
-        e=0.7;
+        
         N+=1;        
         fscanf(AA, "%lf", &a);
         fscanf(OM, "%lf", &Omega);
         // printf("%d\n", N);
-
         fscanf(OM2, "%lf", &omega);
-
         fscanf(INC, "%lf", &inc);
-
+        e=pow(a, qq)*0.7;
         // printf("%lf %lf %lf %lf\n", a, inc, Omega, omega);
 
 
