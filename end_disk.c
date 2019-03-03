@@ -68,10 +68,11 @@ int main(int argc, char* argv[]){
           {"etest", required_argument, NULL, 'e'},
           {"pomega", required_argument, NULL, 'o'},
           {"flag",    required_argument, NULL, 'f'},
+          {"dtag",    required_argument, NULL, 'd'},
           {0, 0, 0, 0}
         };
 
-    while((opt = getopt_long(argc, argv, "e:a:o:n:f:q:", long_options, NULL)) != -1)  
+    while((opt = getopt_long(argc, argv, "e:a:o:n:f:q:d:", long_options, NULL)) != -1)  
     {  
         // printf("%d \n", opt);
         switch(opt)  
@@ -98,6 +99,9 @@ int main(int argc, char* argv[]){
                 break;
             case 'q':
                 q_disk=(optarg);
+                break;
+            case 'd':
+                disk_tag=(optarg);
                 break;
 
         }  
@@ -282,13 +286,21 @@ int main(int argc, char* argv[]){
     char tag2[80]="";
     strcat(tag2, "N");
     snprintf(tag2+strlen(tag2), sizeof(tag2), "%d", N);
-    strcat(tag2,"_");
+    strcat(tag2, "_");
     strcat(tag2, tag);
-    for (int i=1; i<5; i++){
-        strcat(tag2, "_");
-        strcat(tag2, argv[i]);
-    }
-    printf("%s\n",tag2);
+    strcat(tag2, "_e");
+    strcat(tag2, e_test);
+    strcat(tag2, "_a");
+    strcat(tag2, a_test);
+    strcat(tag2, "_o");
+    strcat(tag2, ang_test);
+    strcat(tag2, "_q");
+    strcat(tag2, q_disk);
+    strcat(tag2, "_ein");
+    strcat(tag2, e_in);
+    strcat(tag2, "_dt");
+    strcat(tag2, disk_tag);
+
 
     out("tau", tag2, tauzTot);
     out("i", tag2, ieDot);
