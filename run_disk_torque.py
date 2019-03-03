@@ -25,7 +25,7 @@ i=0
 No=1001
 while (dd>0.05) and (i<4):
 	bc.bash_command('/projects/alge9397/code/c/torques/rebound_disk --etest {0} --atest {1} -o {2} -n {3} -f {4}  -q {5} --ein {6} --dtag {7}'\
-		.format(args.etest, args.atest, args.pomega, No, 0, args.b, args.q, args.ein, args.dtag))
+		.format(args.etest, args.atest, args.pomega, No, 0, args.q, args.ein, args.dtag))
 	sys.stdout.flush()
 	bc.bash_command('/projects/alge9397/code/c/torques/rebound_disk --etest {0} --atest {1} -o {2} -n {3} -f {4}  -q {5} --ein {6} --dtag {7}'\
 		.format(args.etest, args.atest, args.pomega, No, 1, args.q, args.ein, args.dtag))
