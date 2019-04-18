@@ -45,7 +45,7 @@ int main(int argc, char* argv[]){
         //double M = M_PI;
 	//double M = reb_random_uniform(0, 2.*M_PI);
         double f = reb_tools_M_to_f(e_test, M);
-        pt = reb_tools_orbit_to_particle(r->G, r->particles[0], 1.0e3*m, 1., e_test, 0.1*M_PI/180., 0, 0, f);
+        pt = reb_tools_orbit_to_particle(r->G, r->particles[0], m, 1., e_test, 0.1*M_PI/180., 0, 0, f);
         //pt = reb_tools_orbit2d_to_particle(r->G, r->particles[0], 1.0e3*m, 1.0, e_test, 0, f);
         reb_add(r, pt);
 

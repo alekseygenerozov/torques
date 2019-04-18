@@ -7,12 +7,20 @@ import json
 
 loc='//home/aleksey/Dropbox/projects/disk_torque/torque_data_2/dat_q-1.6/reg/'
 
+def renorm(omega):
+	if omega>(np.pi):
+		return -(2.0*np.pi-omega)
+	elif omega<(-np.pi):
+		return 2.0*np.pi+omega
+	else:
+		return omega
+
 # Ntrials=1
 ang_test=np.arange(0., 181, 5)
 ang_test_rad=ang_test*np.pi/180.0
 # a_test=np.arange(0.1, 1.01,0.1)
 # a_test=[0.5]
-a0=0.5
+a0=float(sys.argv[4])
 e_test=np.arange(0., 0.91, 0.1)
 e_test[0]=0.01
 ecrit=0.999999
@@ -66,10 +74,13 @@ def jdot_interp(e, a, omega, j1):
 	sign=1.0
 	if omega<0:
 		sign=-1.0
+	omega=renorm(omega)
+
 	return sign*interpn(( (1.0-e_test)[::-1], ang_test_rad), jdot_avg[::-1,:], [1-e, abs(omega)], method='linear')
 
 
 def idot_interp(e, a, omega, j1):
+	omega=renorm(omega)
 	return np.sign(j1)*interpn(( (1.0-e_test)[::-1], ang_test_rad), idot_avg[::-1,:], [1-e, abs(omega)], method='linear')-idot0/m
 
 
@@ -77,8 +88,7 @@ def rhs(t,y):
 	j1=y[0]
 	a=y[1]
 	omega=y[2]
-	if omega>(np.pi):
-		omega=-(2.0*np.pi-omega)
+	omega=renorm(omega)
 
 	e=eccentricity(j1, a)
 	return [jdot_interp(e, a, omega, j1), 0, idot_interp(e, a, omega, j1)]
@@ -98,11 +108,12 @@ r=ode(rhs)
 y0=[j_part, a_part, omega_part]
 r.set_initial_value(y0, t)
 
-f=open('sol_pert_e{0}_om{1}_idot{2}'.format(e_part, omega_part, idot0), 'w')
+f=open('sol_pert_e{0}_om{1}_idot{2}_a{3}'.format(e_part, omega_part, idot0, a0), 'w')
 while r.successful() and r.t<t_tot:
 	last_e=eccentricity(r.y[0], a0)
 	f.write('{0} {1} {2} {3}\n'.format(r.t/(2.0*np.pi), eccentricity(r.y[0], a0), r.y[2]*180.0/np.pi, r.y[0]))
 	r.integrate(r.t+delta_t)
+	r.y[2]=renorm(r.y[2])
 	if ((last_e>ecrit) and (eccentricity(r.y[0], a0)>ecrit)):
 		print 'lost @ time:{0}'.format(r.t)
 f.close()
