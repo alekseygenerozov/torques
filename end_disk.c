@@ -45,6 +45,17 @@ void out(char* pre, char* tag, double out){
 
 }
 
+void outa(char* pre, char* tag, double out){
+    char fname[80]="";
+    strcat(fname, pre);
+    strcat(fname, "_");
+    strcat(fname, tag);
+    FILE* f = fopen(fname, "a");
+    fprintf(f, "%0.10e\n", out);
+    fclose(f);
+
+}
+
 int main(int argc, char* argv[]){
     struct reb_simulation* r = reb_create_simulation();
     r->G         = 1;
@@ -176,6 +187,7 @@ int main(int argc, char* argv[]){
             reb_add(r, pt);
         }
     }
+
     printf("%d\n", N);
 
     fclose(AA);
@@ -196,11 +208,12 @@ int main(int argc, char* argv[]){
 
     }
 
-
 	double ex=e_test_f*cos(ang_test_rad);
  	double ey=e_test_f*sin(ang_test_rad);
 
-    double c = 0;
+    double ct1 = 0;
+    double ct2 = 0;
+    double ct3 = 0;
     double c2 = 0;
     double c3 = 0;
     double c4 = 0;
@@ -213,6 +226,8 @@ int main(int argc, char* argv[]){
     double tauy=0;
     double tauz=0;
     double tauzTot=0;
+    double tauxTot=0;
+    double tauyTot=0;
     double edotx=0;
     double edoty=0;
     double jz=0;
@@ -252,9 +267,18 @@ int main(int argc, char* argv[]){
             tauz= (xTest*forcey-yTest*forcex);
 
             // tauzTot+=tauz;
-            res=comp_sum(tauzTot, tauz, c);
-            c=res.c;
+            res=comp_sum(tauzTot, tauz, ct1);
+            ct1=res.c;
             tauzTot=res.sum;
+
+            res=comp_sum(tauxTot, taux, ct2);
+            ct2=res.c;
+            tauxTot=res.sum;
+
+            res=comp_sum(tauyTot, tauy, ct3);
+            ct3=res.c;
+            tauyTot=res.sum;
+
             //Angular momentum of test orbit--Take this to be in the xy plane
             jz = xTest*vy-yTest*vx;
             double fr=forcex*cos(phi+ang_test_rad)+forcey*sin(phi+ang_test_rad);
@@ -301,8 +325,10 @@ int main(int argc, char* argv[]){
     strcat(tag2, "_dt");
     strcat(tag2, disk_tag);
 
+    out("tau", tag2, tauxTot);
+    outa("tau", tag2, tauyTot);
+    outa("tau", tag2, tauzTot);
 
-    out("tau", tag2, tauzTot);
     out("i", tag2, ieDot);
     out("i2", tag2, ieDot2);
     out("i3", tag2, ieDot3);

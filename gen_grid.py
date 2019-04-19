@@ -2,26 +2,25 @@ import numpy as np
 
 # a1s=np.arange(0., 1.01, 0.1)
 # a1s[0]=0.01
-a1s=[0.5]
-angs=np.arange(0.0, 180.1, 5.)
-e1s=np.arange(0, 0.91, 0.1)
+a1=0.99
+angs=np.linspace(0.0, 180.0, 20.)
+angs=angs[1:-1]
+e1s=np.arange(0, 1.01, 0.1)
 e1s[0]=0.01
-e2s=[0.99, 1.0-1.0e-6]
-e1s=np.concatenate([e1s, e2s])
-# e1s[-1]=0.99
-# e1s[0]=0.01
-# offsets=[0,1]
+e1s[-1]=0.99
+
+tags=['0.05_a', '0.05_b', '0.1_a', '0.1_b']
 
 for e1 in e1s:
-	for a1 in a1s:
-		for ang in angs:
+	for ang in angs:
+		for tag in tags:
 			temp=open('template.sh').read()
 			temp=temp.replace('xx1', '{0}'.format(e1))
 			temp=temp.replace('xx', '--etest {0}'.format(e1))
 			temp=temp.replace('yy1', '{0}'.format(a1))
 			temp=temp.replace('yy', '--atest {0:.1g}'.format(a1))
 			temp=temp.replace('zz1', '{0}'.format(ang))
-			temp=temp.replace('zz', '--pomega {0:.1f} -q -1.6 --ein 0.9 --dtag 0.018_'.format(ang))
-			f=open('e{0}_a{1:.1g}_ang{2:.1f}_dt0.018.sh'.format(e1, a1, ang), 'w')
+			temp=temp.replace('zz', '--pomega {0:.1f} --ein {1} --etest {1} --dtag {2}'.format(ang, e1, tag))
+			f=open('e{0}_ang{1:.1f}_dt{2}.sh'.format(e1, ang, tag), 'w')
 			f.write(temp)
 			f.close()
