@@ -15,8 +15,37 @@
 #include "tools.h"
 #include "output.h"
 #define MAX_SIZE 1000
+#define MAX_BINS 1000000
 
 
+
+typedef struct {
+  double *array;
+  size_t used;
+  size_t size;
+} Array;
+
+void initArray(Array *a, size_t initialSize) {
+  a->array = (double *)malloc(initialSize * sizeof(double));
+  a->used = 0;
+  a->size = initialSize;
+}
+
+void insertArray(Array *a, double element) {
+  // a->used is the number of used entries, because a->array[a->used++] updates a->used only *after* the array has been accessed.
+  // Therefore a->used can go up to a->size 
+  if (a->used == a->size) {
+    a->size *= 2;
+    a->array = (double *)realloc(a->array, a->size * sizeof(double));
+  }
+  a->array[a->used++] = element;
+}
+
+void freeArray(Array *a) {
+  free(a->array);
+  a->array = NULL;
+  a->used = a->size = 0;
+}
 
 // void heartbeat(struct reb_simulation* const r);
 struct tup
@@ -184,23 +213,41 @@ int main(int argc, char* argv[]){
     strcat(ii, ".txt");
     FILE* INC = fopen(ii, "r");
     double a, e, inc, omega, Omega, M;
-    printf("%lf\n", atof(argv[1]));
+
+    // printf("%lf\n", atof(argv[1]));
+    Array xs, ys, zs, vxs, vys, vzs;
+    initArray(&xs, bins);
+    initArray(&ys, bins);
+    initArray(&zs, bins);
+    initArray(&vxs, bins);
+    initArray(&vys, bins);
+    initArray(&vzs, bins);
 
 
     while((fgets(line, sizeof(line), AA2) != NULL) && (N<MAX_SIZE)){
-        N+=1;        
+        N+=1;  
         fscanf(AA, "%lf", &a);
         fscanf(OM, "%lf", &Omega);
         fscanf(OM2, "%lf", &omega);
         fscanf(INC, "%lf", &inc);
         e=pow(a, qq)*atof(e_in);
 
+        // printf("%lf\n", e);
         for (int j=0; j<bins; j++){
             struct reb_particle pt;
             M = (j+0.5*offset)*((2.*M_PI)/(double)bins);
             double f = reb_tools_M_to_f(e, M);
             pt = reb_tools_orbit_to_particle(r->G, r->particles[0], m, a, e, inc, Omega, omega, f);
-            reb_add(r, pt);
+            
+            insertArray(&xs, pt.x);
+            insertArray(&ys, pt.y);
+            insertArray(&zs, pt.z);
+            insertArray(&vxs, pt.vx);
+            insertArray(&vys, pt.vy);
+            insertArray(&vzs, pt.vz);
+
+
+
         }
     }
 
@@ -219,119 +266,124 @@ int main(int argc, char* argv[]){
         double f = reb_tools_M_to_f(atof(e_test), M);
         pt = reb_tools_orbit2d_to_particle(r->G, r->particles[0], m, a_test_f, e_test_f, ang_test_rad, f);
 
-        reb_add(r, pt);
+        insertArray(&xs, pt.x);
+        insertArray(&ys, pt.y);
+        insertArray(&zs, pt.z);
+        insertArray(&vxs, pt.vx);
+        insertArray(&vys, pt.vy);
+        insertArray(&vzs, pt.vz);
         farr[j]=f;
 
     }
 
 	double ex=e_test_f*cos(ang_test_rad);
  	double ey=e_test_f*sin(ang_test_rad);
+    static double ct1[MAX_BINS];
+    static double ct2[(MAX_BINS)];
+    static double ct3[(MAX_BINS)];
+    static double c2[(MAX_BINS)];
+    static double c3[(MAX_BINS)];
+    static double c4[(MAX_BINS)];
+    static double tauxArr[(MAX_BINS)];
+    static double tauyArr[(MAX_BINS)];
+    static double tauzArr[(MAX_BINS)];
+    static double ieDotArr[(MAX_BINS)];
+    static double ieDot2Arr[(MAX_BINS)];
+    static double ieDot3Arr[(MAX_BINS)];
 
-    double ct1[bins];
-    double ct2[bins];
-    double ct3[bins];
     for (int i =0; i<bins; i++){
         ct1[i]=0;
         ct2[i]=0;
         ct3[i]=0;
+        c2[i]=0;
+        c3[i]=0;
+        c4[i]=0;
+        tauxArr[i]=0;
+        tauyArr[i]=0;
+        tauzArr[i]=0;
+        ieDotArr[i]=0;
+        ieDot2Arr[i]=0;
+        ieDot3Arr[i]=0;
+
     }
-    double c2 = 0;
-    double c3 = 0;
-    double c4 = 0;
 
-    double forcexTot=0;
-    double forceyTot=0;
-    double forcezTot=0;
-
-    double taux=0;
-    double tauy=0;
-    double tauz=0;
-    double tauxArr[bins];
-    double tauyArr[bins];
-    double tauzArr[bins];
-
-    double tauzTot=0;
-    double tauxTot=0;
-    double tauyTot=0;
-    double edotx=0;
-    double edoty=0;
-    double jz=0;
-    double ieDot=0;
-    double ieDot2=0;
-    double ieDot3=0;
     double pre=1.0;
-    double tmp=0;
+    // double tmp=0;
     struct tup res;
 
-    printf("%lf\n", r->particles[N*bins].x);
-    for (int i=1; i<N*bins+1; i++){
-        #pragma omp parallel for private(taux,tauy,tauz,res)
-        for (int j=1; j<bins+1; j++){
-            double x=r->particles[i].x;
-            double y=r->particles[i].y;
-            double z=r->particles[i].z;
+    // printf("%lf\n", r->particles[N*bins].x);
+    for (int i=0; i<N*bins; i++){
+        #pragma omp parallel for private(res)
+        for (int j=0; j<bins; j++){
+            double x=xs.array[i];
+            double y=ys.array[i];
+            double z=zs.array[i];
 
-            double xTest=r->particles[N*bins+j].x;
-            double yTest=r->particles[N*bins+j].y;
-            double zTest=r->particles[N*bins+j].z;
-            double vx=r->particles[N*bins+j].vx;
-            double vy=r->particles[N*bins+j].vy;
-            double vz=r->particles[N*bins+j].vz;
-            double phi = farr[j-1];
+            double xTest=xs.array[N*bins+j];
+            double yTest=ys.array[N*bins+j];
+            double zTest=zs.array[N*bins+j];
+            double vx=vxs.array[N*bins+j];
+            double vy=vys.array[N*bins+j];
+            double vz=vzs.array[N*bins+j];
+            double phi = farr[j];
 
             double d=pow(pow(x-xTest, 2.)+pow(y-yTest,2.)+pow(z-zTest,2.),0.5);
             double forcex = -pow(m,2.0)/pow(d,3.0)*(xTest-x);
             double forcey = -pow(m,2.0)/pow(d,3.0)*(yTest-y);
             double forcez = -pow(m,2.0)/pow(d,3.0)*(zTest-z);
 
+            double taux= (yTest*forcez-zTest*forcey);
+            double tauy= -(xTest*forcez-zTest*forcex);
+            double tauz= (xTest*forcey-yTest*forcex);
 
-            taux= (yTest*forcez-zTest*forcey);
-            tauy= -(xTest*forcez-zTest*forcex);
-            tauz= (xTest*forcey-yTest*forcex);
+            res=comp_sum(tauzArr[j], tauz, ct1[j]);
+            ct1[j]=res.c;
+            tauzArr[j]=res.sum;
 
+            res=comp_sum(tauxArr[j], taux, ct2[j]);
+            ct2[j]=res.c;
+            tauxArr[j]=res.sum;
 
-            res=comp_sum(tauzArr[j-1], tauz, ct1[j-1]);
-            ct1[j-1]=res.c;
-            tauzArr[j-1]=res.sum;
+            res=comp_sum(tauyArr[j], tauy, ct3[j]);
+            ct3[j]=res.c;
+            tauyArr[j]=res.sum;
+            // printf("a: %d\n", j);
 
-            res=comp_sum(tauxArr[j-1], taux, ct2[j-1]);
-            ct2[j-1]=res.c;
-            tauxArr[j-1]=res.sum;
-
-            res=comp_sum(tauyArr[j-1], tauy, ct3[j-1]);
-            ct3[j-1]=res.c;
-            tauyArr[j-1]=res.sum;
 
             //Angular momentum of test orbit--Take this to be in the xy plane
-            // jz = xTest*vy-yTest*vx;
-            // double fr=forcex*cos(phi+ang_test_rad)+forcey*sin(phi+ang_test_rad);
-            // double vr=vx*cos(phi+ang_test_rad)+vy*sin(phi+ang_test_rad);
+            double jz = xTest*vy-yTest*vx;
+            double fr=forcex*cos(phi+ang_test_rad)+forcey*sin(phi+ang_test_rad);
+            double vr=vx*cos(phi+ang_test_rad)+vy*sin(phi+ang_test_rad);
+            double tmp = pre*(-jz*fr/e_test_f*(cos(phi)));
 
-            // tmp = pre*(-jz*fr/e_test_f*(cos(phi)));
-            // res=comp_sum(ieDot2, tmp, c2);
-            // c2=res.c;
-            // ieDot2=res.sum;
+            res=comp_sum(ieDot2Arr[j], tmp, c2[j]);
+            c2[j]=res.c;
+            ieDot2Arr[j]=res.sum;
 
-            // tmp = pre*(-jz*fr/e_test_f*(cos(phi))+tauz*vr/e_test_f*(2/e_test_f+cos(phi)));
-            // res=comp_sum(ieDot, tmp, c3);
-            // c3=res.c;
-            // ieDot=res.sum;
+            tmp = pre*(-jz*fr/e_test_f*(cos(phi))+tauz*vr/e_test_f*(2/e_test_f+cos(phi)));
+            res=comp_sum(ieDotArr[j], tmp, c3[j]);
+            c3[j]=res.c;
+            ieDotArr[j]=res.sum;
 
-            // edotx=forcey*jz+(vy*tauz-vz*tauy);
-            // edoty=-forcex*jz-(vx*tauz-vz*taux);
-            // tmp=((ex*edoty-ey*edotx)/(e_test_f*e_test_f));
-            // res=comp_sum(ieDot3, tmp, c4);
-            // c4=res.c;
-            // ieDot3=res.sum;
+            double edotx=forcey*jz+(vy*tauz-vz*tauy);
+            double edoty=-forcex*jz-(vx*tauz-vz*taux);
+            tmp=((ex*edoty-ey*edotx)/(e_test_f*e_test_f));
+            res=comp_sum(ieDot3Arr[j], tmp, c4[j]);
+            c4[j]=res.c;
+            ieDot3Arr[j]=res.sum;
 
 
        }
 
     }
     // double ieDot=(ex*edoty-ey*edotx)/pow(e_test_f, 2.);
-    tauxTot=sum_arr(tauxArr, bins);
-    tauyTot=sum_arr(tauyArr, bins);
-    tauzTot=sum_arr(tauzArr, bins);
+    double tauxTot=sum_arr(tauxArr, bins);
+    double tauyTot=sum_arr(tauyArr, bins);
+    double tauzTot=sum_arr(tauzArr, bins);
+    double ieDot=sum_arr(ieDotArr, bins);
+    double ieDot2=sum_arr(ieDot2Arr, bins);
+    double ieDot3=sum_arr(ieDot3Arr, bins);
+
 
     char tag2[80]="";
     strcat(tag2, "N");
@@ -355,9 +407,9 @@ int main(int argc, char* argv[]){
     outa("tau", tag2, tauyTot);
     outa("tau", tag2, tauzTot);
 
-    // out("i", tag2, ieDot);
-    // out("i2", tag2, ieDot2);
-    // out("i3", tag2, ieDot3);
+    out("i", tag2, ieDot);
+    out("i2", tag2, ieDot2);
+    out("i3", tag2, ieDot3);
 
     return 0;
 }
