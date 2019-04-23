@@ -8,6 +8,7 @@
 #include <math.h>
 #include <time.h>
 #include <sys/time.h>
+#include <omp.h>
 //#include <iostream>
 //#include <uuid/uuid.h>
 #include "rebound.h"
@@ -32,6 +33,21 @@ struct tup comp_sum(double sum,  double val, double c){
     res.sum= tt;
 
     return res;
+}
+
+double sum_arr(double* arr, int N){
+    double sum=0;
+    int i=0;
+    double c=0;
+    struct tup res;
+
+    for (i=0; i<N; i++){
+        res=comp_sum(sum, arr[i], c);
+        sum=res.sum;
+        c=res.c;
+    }
+
+    return sum;
 }
 
 void out(char* pre, char* tag, double out){
@@ -211,9 +227,14 @@ int main(int argc, char* argv[]){
 	double ex=e_test_f*cos(ang_test_rad);
  	double ey=e_test_f*sin(ang_test_rad);
 
-    double ct1 = 0;
-    double ct2 = 0;
-    double ct3 = 0;
+    double ct1[bins];
+    double ct2[bins];
+    double ct3[bins];
+    for (int i =0; i<bins; i++){
+        ct1[i]=0;
+        ct2[i]=0;
+        ct3[i]=0;
+    }
     double c2 = 0;
     double c3 = 0;
     double c4 = 0;
@@ -225,6 +246,10 @@ int main(int argc, char* argv[]){
     double taux=0;
     double tauy=0;
     double tauz=0;
+    double tauxArr[bins];
+    double tauyArr[bins];
+    double tauzArr[bins];
+
     double tauzTot=0;
     double tauxTot=0;
     double tauyTot=0;
@@ -240,11 +265,12 @@ int main(int argc, char* argv[]){
 
     printf("%lf\n", r->particles[N*bins].x);
     for (int i=1; i<N*bins+1; i++){
-        double x=r->particles[i].x;
-        double y=r->particles[i].y;
-        double z=r->particles[i].z;
-
+        #pragma omp parallel for private(taux,tauy,tauz,res)
         for (int j=1; j<bins+1; j++){
+            double x=r->particles[i].x;
+            double y=r->particles[i].y;
+            double z=r->particles[i].z;
+
             double xTest=r->particles[N*bins+j].x;
             double yTest=r->particles[N*bins+j].y;
             double zTest=r->particles[N*bins+j].z;
@@ -258,54 +284,54 @@ int main(int argc, char* argv[]){
             double forcey = -pow(m,2.0)/pow(d,3.0)*(yTest-y);
             double forcez = -pow(m,2.0)/pow(d,3.0)*(zTest-z);
 
-            forcexTot+=forcex;
-            forceyTot+=forcey;
-            forcezTot+=forcez;
 
             taux= (yTest*forcez-zTest*forcey);
             tauy= -(xTest*forcez-zTest*forcex);
             tauz= (xTest*forcey-yTest*forcex);
 
-            // tauzTot+=tauz;
-            res=comp_sum(tauzTot, tauz, ct1);
-            ct1=res.c;
-            tauzTot=res.sum;
 
-            res=comp_sum(tauxTot, taux, ct2);
-            ct2=res.c;
-            tauxTot=res.sum;
+            res=comp_sum(tauzArr[j-1], tauz, ct1[j-1]);
+            ct1[j-1]=res.c;
+            tauzArr[j-1]=res.sum;
 
-            res=comp_sum(tauyTot, tauy, ct3);
-            ct3=res.c;
-            tauyTot=res.sum;
+            res=comp_sum(tauxArr[j-1], taux, ct2[j-1]);
+            ct2[j-1]=res.c;
+            tauxArr[j-1]=res.sum;
+
+            res=comp_sum(tauyArr[j-1], tauy, ct3[j-1]);
+            ct3[j-1]=res.c;
+            tauyArr[j-1]=res.sum;
 
             //Angular momentum of test orbit--Take this to be in the xy plane
-            jz = xTest*vy-yTest*vx;
-            double fr=forcex*cos(phi+ang_test_rad)+forcey*sin(phi+ang_test_rad);
-            double vr=vx*cos(phi+ang_test_rad)+vy*sin(phi+ang_test_rad);
+            // jz = xTest*vy-yTest*vx;
+            // double fr=forcex*cos(phi+ang_test_rad)+forcey*sin(phi+ang_test_rad);
+            // double vr=vx*cos(phi+ang_test_rad)+vy*sin(phi+ang_test_rad);
 
-            tmp = pre*(-jz*fr/e_test_f*(cos(phi)));
-            res=comp_sum(ieDot2, tmp, c2);
-            c2=res.c;
-            ieDot2=res.sum;
+            // tmp = pre*(-jz*fr/e_test_f*(cos(phi)));
+            // res=comp_sum(ieDot2, tmp, c2);
+            // c2=res.c;
+            // ieDot2=res.sum;
 
-            tmp = pre*(-jz*fr/e_test_f*(cos(phi))+tauz*vr/e_test_f*(2/e_test_f+cos(phi)));
-            res=comp_sum(ieDot, tmp, c3);
-            c3=res.c;
-            ieDot=res.sum;
+            // tmp = pre*(-jz*fr/e_test_f*(cos(phi))+tauz*vr/e_test_f*(2/e_test_f+cos(phi)));
+            // res=comp_sum(ieDot, tmp, c3);
+            // c3=res.c;
+            // ieDot=res.sum;
 
-            edotx=forcey*jz+(vy*tauz-vz*tauy);
-            edoty=-forcex*jz-(vx*tauz-vz*taux);
-            tmp=((ex*edoty-ey*edotx)/(e_test_f*e_test_f));
-            res=comp_sum(ieDot3, tmp, c4);
-            c4=res.c;
-            ieDot3=res.sum;
+            // edotx=forcey*jz+(vy*tauz-vz*tauy);
+            // edoty=-forcex*jz-(vx*tauz-vz*taux);
+            // tmp=((ex*edoty-ey*edotx)/(e_test_f*e_test_f));
+            // res=comp_sum(ieDot3, tmp, c4);
+            // c4=res.c;
+            // ieDot3=res.sum;
 
 
        }
 
     }
     // double ieDot=(ex*edoty-ey*edotx)/pow(e_test_f, 2.);
+    tauxTot=sum_arr(tauxArr, bins);
+    tauyTot=sum_arr(tauyArr, bins);
+    tauzTot=sum_arr(tauzArr, bins);
 
     char tag2[80]="";
     strcat(tag2, "N");
@@ -329,9 +355,9 @@ int main(int argc, char* argv[]){
     outa("tau", tag2, tauyTot);
     outa("tau", tag2, tauzTot);
 
-    out("i", tag2, ieDot);
-    out("i2", tag2, ieDot2);
-    out("i3", tag2, ieDot3);
+    // out("i", tag2, ieDot);
+    // out("i2", tag2, ieDot2);
+    // out("i3", tag2, ieDot3);
 
     return 0;
 }
