@@ -1,4 +1,5 @@
 import numpy as np
+import os
 
 # a1s=np.arange(0., 1.01, 0.1)
 # a1s[0]=0.01
