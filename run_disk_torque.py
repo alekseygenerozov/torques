@@ -29,7 +29,7 @@ while (dd>0.05) and (i<4):
 		.format(args.etest, args.atest, args.pomega, No, 0, args.q, args.ein, args.dtag))
 	sys.stdout.flush()
 	bc.bash_command('/projects/alge9397/code/c/torques/rebound_disk --etest {0} --atest {1} -o {2} -n {3} -f {4}  -q {5} --ein {6} --dtag {7}'\
-		.format(args.etest, args.atest, args.pomega, No, 0, args.q, args.ein, args.dtag))
+		.format(args.etest, args.atest, args.pomega, No, 1, args.q, args.ein, args.dtag))
 	tdot1=np.genfromtxt('tau_N{6}_a_e{0}_a{1}_o{2}_q{3}_ein{4}_dt{5}'.format(args.etest, args.atest, args.pomega, args.q, args.ein, args.dtag, Nd))
 	tdot2=np.genfromtxt('tau_N{6}_b_e{0}_a{1}_o{2}_q{3}_ein{4}_dt{5}'.format(args.etest, args.atest, args.pomega, args.q, args.ein, args.dtag, Nd))
 	dd=np.max(np.abs((tdot1-tdot2)/tdot1))
