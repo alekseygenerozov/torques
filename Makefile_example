@@ -1,5 +1,5 @@
 ##Edit the below line with the correct path to rebound
-REBOUND_PATH=/home/aleksey/rebound/src/
+export REBOUND_PATH=/home/aleksey/rebound/src/
 include $(REBOUND_PATH)/Makefile.defs
 
 all: librebound
