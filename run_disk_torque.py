@@ -28,9 +28,9 @@ args=parser.parse_args()
 
 dd=1.0
 i=0
-No=1024
+No=1001
 pre=os.path.join(os.path.dirname(__file__))
-while (dd>0.05) and (i<4):
+while (dd>0.05) and (i<10):
 	Nd=min(len(np.array([np.genfromtxt('a_{0}.txt'.format(args.dtag))]).flatten()), 1000)
 	bash_command(pre+'/rebound_disk --etest {0} --atest {1} -o {2} -n {3} -f {4}  -q {5} --ein {6} --dtag {7}'\
 		.format(args.etest, args.atest, args.pomega, No, 0, args.q, args.ein, args.dtag))
