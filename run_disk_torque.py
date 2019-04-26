@@ -46,4 +46,4 @@ while (dd>0.05) and (i<10):
 	# dd=max(dd, abs((idot1-idot2)/idot1))
 	No=No*2
 	i+=1
-	print args.etest, args.atest, args.pomega, i-1,No/2, abs((tdot1-tdot2)/tdot1)#, abs((idot1-idot2)/idot1)
+	print(args.etest, args.atest, args.pomega, i-1,No/2, abs((tdot1-tdot2)/tdot1))#, abs((idot1-idot2)/idot1)

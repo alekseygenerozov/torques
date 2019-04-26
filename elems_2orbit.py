@@ -45,7 +45,7 @@ poms=np.linspace(0, 1, 20)
 flist=['inc','Om','om']
 
 elems= gen_disk(0,pert,0,0,0,0)
-print elems
+print(elems)
 for ii,ee in enumerate(elems):
     f=open(base+flist[ii]+'_{0}_a.txt'.format(pert), 'w')
     f.write('{0}\n'.format(ee))
@@ -56,7 +56,7 @@ f.close()
 
 
 elems=gen_disk(0,0,0,pert,0,0)
-print elems
+print(elems)
 for ii,ee in enumerate(elems):
     f=open(base+flist[ii]+'_{0}_b.txt'.format(pert),'w')
     f.write('{0}\n'.format(ee))

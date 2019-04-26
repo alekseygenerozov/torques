@@ -65,7 +65,7 @@ ax.set_xlabel(r'$\bar{\omega}$')
 ax.set_ylabel(r'$a$')
 
 tlist=[-1.0e6, -1.0e5, -1.0e4, -1.0e3,1.0e3, 1.0e4, 1.0e5, 1.0e6]
-tlist_tex=map(latex_exp.latex_exp, tlist)
+tlist_tex=list(map(latex_exp.latex_exp, tlist))
 tlist_tex=[re.sub('1.0 \\\\times\s', '', tt) for tt in tlist_tex] 
 
 ang_ords=np.append(ang_test-2.5, ang_test[-1]+2.5)

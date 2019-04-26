@@ -70,7 +70,7 @@ for ii,e1 in enumerate(e_test):
 
 
 tlist=[-10, -1, -0.1, -0.01, 0.01, 0.1, 1.0, 10.]
-tlist_tex=map(latex_exp.latex_exp, tlist)
+tlist_tex=list(map(latex_exp.latex_exp, tlist))
 tlist_tex=[re.sub('1.0 \\\\times\s', '', tt) for tt in tlist_tex] 
 
 ang_ords=np.append(ang_test-2.5, ang_test[-1]+2.5)

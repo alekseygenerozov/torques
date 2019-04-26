@@ -26,5 +26,5 @@ while (dd>0.05) and (i<4):
 	dd=max(dd, abs((idot1-idot2)/idot1))
 	No=No*2
 	i+=1
-	print e1, a1, ang, i-1,No/2, abs((tdot1-tdot2)/tdot1), abs((idot1-idot2)/idot1)
+	print(e1, a1, ang, i-1,No/2, abs((tdot1-tdot2)/tdot1), abs((idot1-idot2)/idot1))
 	sys.stdout.flush()

@@ -57,7 +57,7 @@ for ii,a1 in enumerate(a_test):
 
 
 tlist=[-1.0e6, -1.0e5, -1.0e4, -1.0e3,1.0e3, 1.0e4, 1.0e5, 1.0e6]
-tlist_tex=map(latex_exp.latex_exp, tlist)
+tlist_tex=list(map(latex_exp.latex_exp, tlist))
 tlist_tex=[re.sub('1.0 \\\\times\s', '', tt) for tt in tlist_tex] 
 
 

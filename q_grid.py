@@ -48,8 +48,8 @@ for ecc in eccs:
 
 	v1=-1
 	v2=1
-	tlist=np.concatenate([-10.0**np.array(range(v1, v2+1)),10.0**np.array(range(v1, v2+1))])
-	tlist_tex=map(latex_exp.latex_exp, tlist)
+	tlist=np.concatenate([-10.0**np.array(list(range(v1, v2+1))),10.0**np.array(list(range(v1, v2+1)))])
+	tlist_tex=list(map(latex_exp.latex_exp, tlist))
 	tlist_tex=[re.sub('1.0 \\\\times\s', '', tt) for tt in tlist_tex] 
 
 	ang_ords=np.append(ang_test-2.5, ang_test[-1]+2.5)

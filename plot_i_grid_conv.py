@@ -47,11 +47,11 @@ for ecc in eccs:
 	ax.set_ylabel(r'$a$')
 
 	tlist=[0.0001, 0.01, 1.0e-1, 1, 10.0]
-	tlist_tex=map(latex_exp.latex_exp, tlist)
+	tlist_tex=list(map(latex_exp.latex_exp, tlist))
 	tlist_tex=[re.sub('1.0 \\\\times\s', '', tt) for tt in tlist_tex] 
 
 	diffs=abs((derivb_avg-deriv_avg)/deriv_avg)
-	print ecc
+	print(ecc)
 	# for ii,a1 in enumerate(a_test):
 	# 	for jj,ang in enumerate(ang_test):
 	# 		if diffs[ii, jj]>0.1:

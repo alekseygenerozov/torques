@@ -34,7 +34,7 @@ t_sec=2.0*np.pi*(1.0/mdisk)
 t_norm=t_sec/(2.0*np.pi)
 idot0=float(sys.argv[3])
 
-print "#{0}".format((idot0)/m*t_norm)
+print("#{0}".format((idot0)/m*t_norm))
 f=open(loc+"prec_rate.json", "rb")
 prec_rate=json.loads(json.load(f))
 
@@ -115,5 +115,5 @@ while r.successful() and r.t<t_tot:
 	r.integrate(r.t+delta_t)
 	r.y[2]=renorm(r.y[2])
 	if ((last_e>ecrit) and (eccentricity(r.y[0], a0)>ecrit)):
-		print 'lost @ time:{0}'.format(r.t)
+		print('lost @ time:{0}'.format(r.t))
 f.close()

@@ -1,12 +1,15 @@
+from __future__ import print_function
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 from matplotlib.ticker import LogFormatter 
 
+import matplotlib as mpl
+print(mpl.matplotlib_fname())
 
 poms=np.linspace(0, 180.0, 20)
 poms=poms[1:-1]
-print poms
+print(poms)
 eccs=np.arange(0, 1.01, 0.1)
 eccs[0]=0.01
 eccs[-1]=0.99
@@ -22,14 +25,14 @@ for i,pp in enumerate(poms):
 	for j,ecc in enumerate(eccs):
 		po=pp*np.pi/180.0
 
-		taus=np.genfromtxt('tau_N1_a_e{0}_a{1}_o{2:.1f}_q0.0_ein{0}_{3}_a'.format(ecc, a1, pp, tag))
+		taus=np.genfromtxt('tau_N1_a_e{0:.2g}_a{1}_o{2:.1f}_q0.0_ein{0:.2g}_{3}_a'.format(ecc, a1, pp, tag))
 		taux=taus[0]
 		tauy=taus[1]
 		taua=np.cos(po)*taux+np.sin(po)*tauy
 
 		alpha=2.0*np.pi*taua/m/(1.0-ecc**2.0)**0.5
 
-		taus=np.genfromtxt('tau_N1_a_e{0}_a{1}_o{2:.1f}_q0.0_ein{0}_{3}_b'.format(ecc, a1, pp, tag))
+		taus=np.genfromtxt('tau_N1_a_e{0:.2g}_a{1}_o{2:.1f}_q0.0_ein{0:.2g}_{3}_b'.format(ecc, a1, pp, tag))
 		taux=taus[0]
 		tauy=taus[1]
 		taub=-np.sin(po)*taux+np.cos(po)*tauy
@@ -41,14 +44,14 @@ for i,pp in enumerate(poms):
 	for j,ecc in enumerate(eccs):
 		po=pp*np.pi/180.0
 
-		taus=np.genfromtxt('tau_N1_b_e{0}_a{1}_o{2:.1f}_q0.0_ein{0}_{3}_a'.format(ecc, a1, pp, tag))
+		taus=np.genfromtxt('tau_N1_b_e{0:.2g}_a{1}_o{2:.1f}_q0.0_ein{0:.2g}_{3}_a'.format(ecc, a1, pp, tag))
 		taux=taus[0]
 		tauy=taus[1]
 		taua=np.cos(po)*taux+np.sin(po)*tauy
 
 		alpha=2.0*np.pi*taua/m/(1.0-ecc**2.0)**0.5
 
-		taus=np.genfromtxt('tau_N1_b_e{0}_a{1}_o{2:.1f}_q0.0_ein{0}_{3}_b'.format(ecc, a1, pp, tag))
+		taus=np.genfromtxt('tau_N1_b_e{0:.2g}_a{1}_o{2:.1f}_q0.0_ein{0:.2g}_{3}_b'.format(ecc, a1, pp, tag))
 		taux=taus[0]
 		tauy=taus[1]
 		taub=-np.sin(po)*taux+np.cos(po)*tauy

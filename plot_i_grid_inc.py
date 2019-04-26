@@ -42,8 +42,8 @@ for jj,ang in enumerate(ang_test):
 		derivb[jj,idx-1]=np.genfromtxt(loc+'{2}_N1000_b_0.7_{0}_{1}_{3}'.format(a1, ang, tag, idx))*norm
 
 
-print np.transpose([np.mean(deriv, axis=1), sem(deriv, axis=1)])
-print np.transpose([np.mean(deriv, axis=1)-sem(deriv, axis=1), np.mean(deriv, axis=1)+sem(deriv, axis=1)])
+print(np.transpose([np.mean(deriv, axis=1), sem(deriv, axis=1)]))
+print(np.transpose([np.mean(deriv, axis=1)-sem(deriv, axis=1), np.mean(deriv, axis=1)+sem(deriv, axis=1)]))
 # print np.min(deriv,axis=1), np.max(deriv,axis=1)
 
 fig,ax=plt.subplots(figsize=(10,9))
