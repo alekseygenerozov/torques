@@ -1,0 +1,97 @@
+Summary of steps for two orbit experiment:
+
+(I am assuming you will do this experiment on summit).
+Compile the code with "make" (but complete step 1 below first).
+Go to some other directory where you will store the torque data. And run 
+the pipeline script (pipeline_2orbit.py). Note that 
+you have to specify a semi-major axis when you do this 
+(e.g. "python pipeline_2orbit.py 1" to specify an sma of 1).
+
+This will produce a bunch of .sh files, 
+which can be submitted using a for loop:
+
+"for i in `echo e*sh`; do sbatch $i ; done"
+
+However, I suggest submitting just a single job first to make sure it is working (this 
+is why I did not automate this step).
+
+The script "post_proc_2orbit.py" will then create a plot of the instability time-scale from the
+resulting data (though you may have to change a1 to the sma you actually picked)
+
+
+Details:
+1. Compilation: "Makefile_example" is an example Makefile. You will have to
+   edit REBOUND_PATH (so that it corresponds to the rebound src directory on
+   your system). Once you have done this you can copy Makefile_example to
+   Makefile and then type make to "compile". This will output an executable
+   called "rebound_disk."  
+
+2. This program calculates the torque and precession
+   rate of a test orbit due to a perturbing disk. The relevant code 
+   is all contain in end_disk.c (The other files are wrappers
+   and plotting routines).
+
+   The orbital elements of the disk are assumed to be in files a_*.txt, Om_*.txt, om_*.txt, inc_*.txt,
+   where * is a suffix that can be specified by the user using the --dtag flag (e.g. ./rebound_disk --dtag tag).
+   It is "1" by default. The program will read up to 1000 rows from these files (corresponding to 1000 orbits). 
+
+
+3. The user can also specify other parameters via command line arguments:
+
+	--atest (-a), --etest (-e), and --pomega (-o) specify the semi-major axis, eccentricity, 
+	and orientation of the test orbit. Note pomega is in degrees. The defaults are 0.99, 0.7, and 0.
+
+	--ein (-i), and -q specify the eccentricity profile of the disk. For a disk orbit 
+	with a semi-major axis of, the eccentricity is e=ein*a^q. The defaults for ein and q are 0.7 and 0
+   respectively.
+
+	-n specifies the number of segments into which to divide the disk and perturbing orbits (The default is 1001. 
+   The user can specify up to 1e6).
+
+4. The x, y, and z components of the torque are written to a file with the following name pattern 
+tau_N*_[ab]_e*_a*_o*_q*_ein*_dt*. In reality the "*s"  indicate the parameters
+for that run.  
+ 
+5. run_disk_torque.py is a python wrapper for the above program. It has the same command line arguments. 
+It runs the program twice with different sets of segments to check for convergence. If the results are not converged 
+(within 5%) it doubles the number of segments per orbit. It repeats this up to nine times. 
+
+#####Scripts for the two orbit calculation####
+
+I created a file call pipeline_2orbit.py which should automate much of the two orbit calculation.
+This script takes a single command line argument which is the sma of both the perturbing 
+and test orbits. (Though I multiply this by 0.99 for the test orbit to minimize overlap).
+
+The pipeline runs the following 2 python scripts. 
+
+1. elems_2orbit.py -- generates files containing orbital elements for perturbing orbit. Takes two cmd line arguments.
+The first corresponds to ia/ib and the second corresponds to the semi-major axis. For example:
+
+"python elems_2orbit.py 0.05 1" 
+
+would produce the following files 
+
+"a_0.05_a.txt  a_0.05_b.txt  inc_0.05_a.txt  inc_0.05_b.txt  om_0.05_a.txt  Om_0.05_a.txt  om_0.05_b.txt  Om_0.05_b.txt"
+
+Files ending with "_a.txt" indicate rotation about the major axis, while
+files with "_b.txt" indicate rotation about the minor axis. Each file
+would just contain a single number; a_0.05_[ab].txt would just have 1. 
+
+2. gen_grid_2orbit.py -- Generate submit scripts for a grid of (test orbit)
+   eccentricities and pomegas. This takes one argument which is the semi-major axis 
+   of the test orbit.
+
+
+
+#########
+
+These can all be submitted via a for loop 
+
+"for i in `echo e*sh`; do sbatch $i ; done"
+
+
+
+##########
+
+3. post_proc_2orbit.py -- Processes outputs from the above calculation and produces a contour plot of the 
+growth time for the inclination instability.
