@@ -1,3 +1,4 @@
+from __future__ import print_function
 from bash_command import bash_command as bc
 import numpy as np
 import sys
@@ -26,5 +27,5 @@ while (dd>0.05) and (i<4):
 	dd=max(dd, abs((idot1-idot2)/idot1))
 	No=No*2
 	i+=1
-	print(e1, a1, ang, i-1,No/2, abs((tdot1-tdot2)/tdot1), abs((idot1-idot2)/idot1))
+	print((e1, a1, ang, i-1,No/2, abs((tdot1-tdot2)/tdot1), abs((idot1-idot2)/idot1)))
 	sys.stdout.flush()

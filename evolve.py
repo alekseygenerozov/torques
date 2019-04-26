@@ -1,3 +1,4 @@
+from __future__ import print_function
 import numpy as np
 from scipy.interpolate import griddata, interpn
 import sys
@@ -82,7 +83,7 @@ delta_t=2.0*np.pi
 # delta_t=t_norm/100.0
 t=0.0
 
-print(e_test, ang_test_rad, jdot_avg.shape)
+print((e_test, ang_test_rad, jdot_avg.shape))
 print(jdot_interp(e_part, a_part, omega_part))
 
 r=ode(rhs)

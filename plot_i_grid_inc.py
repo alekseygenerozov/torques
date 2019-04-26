@@ -1,3 +1,4 @@
+from __future__ import print_function
 import seaborn as sns
 from labelLine import labelLines
 import matplotlib.pyplot as plt
