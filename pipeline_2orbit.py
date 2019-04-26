@@ -16,5 +16,5 @@ a=sys.argv[1]
 bash_command('python {0}/elems_2orbit.py 0.05 {0}'.format(pre, a))
 bash_command('python {0}/elems_2orbit.py 0.1 {0}'.format(pre, a))
 bash_command('ln -s {0}/template_2orbit.sh'.format(pre))
-bash_command('python {0}/gen_grid_2orbit.py {0}'.format(pre, a))
+bash_command('python {0}/gen_grid_2orbit.py {0}'.format(pre, 0.99*a))
 bash_command('ln -s {0}/librebound.so'.format(rpath))
