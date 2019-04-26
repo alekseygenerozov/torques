@@ -11,7 +11,7 @@ def bash_command(cmd):
 pre=os.path.join(os.path.dirname(__file__))
 f=open(pre+'/Makefile','r')
 rpath=((f.read().split('\n')[1]).split('='))[-1]
-a=sys.argv[1]
+a=float(sys.argv[1])
 
 bash_command('python {0}/elems_2orbit.py 0.05 {0}'.format(pre, a))
 bash_command('python {0}/elems_2orbit.py 0.1 {0}'.format(pre, a))
