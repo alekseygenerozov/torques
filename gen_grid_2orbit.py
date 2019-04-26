@@ -1,9 +1,8 @@
 import numpy as np
 import os
+import sys
 
-# a1s=np.arange(0., 1.01, 0.1)
-# a1s[0]=0.01
-a1=0.99
+a1=sys.argv[1]
 angs=np.linspace(0.0, 180.0, 20.)
 angs=angs[1:-1]
 e1s=np.arange(0, 1.01, 0.1)

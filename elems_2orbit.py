@@ -39,6 +39,7 @@ def gen_disk(ang1, ang1_mean, ang2, ang2_mean, ang3, ang3_mean):
 
 
 pert=float(sys.argv[1])
+apert=float(sys.argv[2])
 base='./'
 poms=np.linspace(0, 1, 20)
 flist=['inc','Om','om']
@@ -50,7 +51,7 @@ for ii,ee in enumerate(elems):
     f.write('{0}\n'.format(ee))
     f.close()
 f=open('a_{0}_a.txt'.format(pert),'w')
-f.write('{0}\n'.format(1.0))
+f.write('{0}\n'.format(apert))
 f.close()
 
 
@@ -61,6 +62,6 @@ for ii,ee in enumerate(elems):
     f.write('{0}\n'.format(ee))
     f.close()
 f=open('a_{0}_b.txt'.format(pert),'w')
-f.write('{0}\n'.format(1.0))
+f.write('{0}\n'.format(apert))
 f.close()
     
