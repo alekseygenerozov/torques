@@ -24,13 +24,18 @@ parser.add_argument('-o','--pomega', default=0,
 	help='specifies orientation ', type=float)
 parser.add_argument('-d','--dtag', default='1',
 	help='data file containing disk orbital elements ', type=str)
+parser.add_argument('--iter', default=9, type=int,
+	help='maximum number of iterations')
+parser.add_argument('-n', '--nstart', default=1001, type=int,
+	help='starting number of bins')
 # offset=sys.argv[5]
 
 args=parser.parse_args()
 
 dd=1.0
 i=0
-No=1001
+No=args.nstart
+iter_max=args.iter
 pre=os.path.join(os.path.dirname(__file__))
 while (dd>0.05) and (i<10):
 	Nd=min(len(np.array([np.genfromtxt('a_{0}.txt'.format(args.dtag))]).flatten()), 1000)
